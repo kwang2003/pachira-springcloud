@@ -14,7 +14,7 @@
 |guava|18.0|
 
 ### 系统架构
-![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086)
+![etc/微服务架构设计.png](etc/微服务架构设计.png)
 
 ### 系统模块
 
