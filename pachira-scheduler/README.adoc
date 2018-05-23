@@ -1,0 +1,15 @@
+== 项目信息
+* 基于spring boot
+* jdk1.8
+* 使用Swagger2作为rest 自动API文档自动生成
+* 使用quartz做定时任务调度
+* 任务信息存储在数据库中，可以动态添加、删除(暂不支持修改操作)
+* 使用zookeeper进行任务执行节点选择，保证同一个任务只在一个节点上运行
+* 多节点部署时任务随机分配到各个节点上运行，提高集群资源利用率
+
+== 本地运行项目
+* 新建数据库scheduler，并将scheduler.sql脚本导入到数据库中
+* 本地运行一个zookeeper，占用2181端口（默认），如果没有安装，则到http://zookeeper.apache.org/ 下载一个
+* 修改项目配置项 application.properties，包括zookeeper的地址和端口，数据库的连接信息
+* 运行项目SchedulerApplication
+* 查看项目的API http://localhost:8080/swagger-ui.html

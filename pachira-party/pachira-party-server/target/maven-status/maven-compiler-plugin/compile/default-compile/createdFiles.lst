@@ -1,0 +1,17 @@
+com\pachiraframework\party\controller\AbstractPartyController.class
+com\pachiraframework\party\dao\PersonDao.class
+com\pachiraframework\party\controller\PersonController.class
+com\pachiraframework\party\config\MyBatisConfig.class
+com\pachiraframework\party\dao\AbstractPartyDao.class
+com\pachiraframework\party\dao\PartyDao.class
+com\pachiraframework\party\PachiraPartyApplication.class
+com\pachiraframework\party\service\impl\ClientServiceImpl.class
+com\pachiraframework\party\dao\OrganizationDao.class
+com\pachiraframework\party\dao\ClientDao.class
+com\pachiraframework\party\controller\OrganizationController.class
+com\pachiraframework\party\config\DataSourceConfig.class
+com\pachiraframework\party\service\PersonService.class
+com\pachiraframework\party\service\ClientService.class
+com\pachiraframework\party\service\OrganizationService.class
+com\pachiraframework\party\config\Swagger2Config.class
+com\pachiraframework\party\controller\UserController.class

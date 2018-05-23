@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.pachiraframework.scheduler.dao.ServiceRegistryDao" >  
+	<resultMap id="ServiceRegistryMap" type="ServiceRegistry">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="type" column="type" />
+		<result property="properties" column="properties" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+	</resultMap>
+	<sql id="table">service_registry</sql>
+	<sql id="columns">
+		id,name,address,type,properties,created_at,updated_at</sql>
+	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
+	<sql id="orderBy">
+		<if test="pageRequest.orders.size() > 0">
+			<foreach collection="pageRequest.orders" item="order" open="order by"
+				separator="," close=" "> ${order.property} ${order.direction}             
+			</foreach>
+		</if>
+	</sql> 	<!-- 分页查询模版普通信息 -->
+	<sql id="findByPageCriteria">
+		<if test="params.address!=null and params.address !=''">
+			and `name` like CONCAT('%',#{params.name},'%' ) 		
+		</if>
+		<if test="params.status!=null and params.status !=''"> 			
+			<![CDATA[ 			
+				and status = (#{params.status}) 			
+			]]>
+		</if>
+	</sql>
+	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="ServiceRegistryMap">
+		select id,<include refid="columns"/> 
+		from <include refid="table"/>
+		where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}  
+        </foreach>
+        <foreach item="k" index="key" collection="orders" separator="," open=" order by ">
+        	${k.column} ${k.order}
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>
+	</select>
+	<update id="updateBySqlCommand" parameterType="SqlUpdateCommand">
+		update <include refid="table"/>
+		set updated_at = now(),
+        <foreach item="k" index="key" collection="columnValues" separator=",">
+            ${k.column} = #{k.value}
+        </foreach>
+        where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}    
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>        
+	</update>
+	<select id="findByPage" parameterType="PageRequest" resultMap="ServiceRegistryMap">
+		select id,
+		<include refid="columns" />
+		from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+		<include refid="orderBy" />
+		<include refid="limit" />
+	</select>
+	<select id="findByPageCount" parameterType="PageRequest"
+		resultType="int">
+		select count(*) from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+	</select>
+	<insert id="insert" parameterType="ServiceRegistry" useGeneratedKeys="false" keyProperty="id">
+		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
+		VALUES(
+			#{id},
+			#{name},
+			#{address},
+			#{type},
+			#{properties},
+			now(),
+			now()	)
+	</insert>
+</mapper>

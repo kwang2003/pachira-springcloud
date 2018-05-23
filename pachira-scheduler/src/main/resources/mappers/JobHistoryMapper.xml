@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.pachiraframework.scheduler.dao.JobHistoryDao" >  
+	<resultMap id="JobHistoryMap" type="JobHistory">
+		<id property="id" column="id" />
+		<result property="jobId" column="job_id" />
+		<result property="jobName" column="job_name" />
+		<result property="cron" column="cron" />
+		<result property="startedAt" column="started_at" />
+		<result property="endedAt" column="ended_at"/>
+		<result property="status" column="status"/>
+		<result property="instance" column="instance" />
+		<result property="message" column="message"/>
+	</resultMap>
+	<sql id="table">job_history</sql>
+	<sql id="columns">
+		job_id,job_name,cron,started_at,ended_at,status,instance,message</sql>
+	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
+	<sql id="orderBy">
+		<if test="pageRequest.orders.size() > 0">
+			<foreach collection="pageRequest.orders" item="order" open="order by"
+				separator="," close=" "> ${order.property} ${order.direction}             
+			</foreach>
+		</if>
+	</sql> 	<!-- 分页查询模版普通信息 -->
+	<sql id="findByPageCriteria">
+		<if test="pageRequest.jobId!=null and pageRequest.jobId !=0">
+			and `job_id` =#{pageRequest.jobId}	
+		</if>
+		<if test="pageRequest.startDate!=null and pageRequest.startDate !=''"> 			
+			<![CDATA[ 			
+				and created_at >= (#{pageRequest.startDate}) 			
+			]]>
+		</if>
+		<if test="pageRequest.endDate!=null and pageRequest.endDate !=''"> 			
+			<![CDATA[ 			
+				and created_at <= (#{pageRequest.endDate}) 			
+			]]>
+		</if>
+	</sql>
+	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="JobHistoryMap">
+		select id,<include refid="columns"/> 
+		from <include refid="table"/>
+		where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}  
+        </foreach>
+        <foreach item="k" index="key" collection="orders" separator="," open=" order by ">
+        	${k.column} ${k.order}
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>
+	</select>
+	<update id="updateBySqlCommand" parameterType="SqlUpdateCommand">
+		update <include refid="table"/>
+		set 
+        <foreach item="k" index="key" collection="columnValues" separator=",">
+            ${k.column} = #{k.value}
+        </foreach>
+        where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}    
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>        
+	</update>
+	<select id="findByPage" parameterType="PageRequest" resultMap="JobHistoryMap">
+		select id,
+		<include refid="columns" />
+		from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+		<include refid="orderBy" />
+		<include refid="limit" />
+	</select>
+	<select id="findByPageCount" parameterType="PageRequest"
+		resultType="int">
+		select count(*) from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+	</select>
+	<insert id="insert" parameterType="JobHistory" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
+		VALUES(
+			#{jobId},
+			#{jobName},
+			#{cron},
+			#{startedAt},
+			#{endedAt},
+			#{status},
+			#{instance},
+			#{message}	)
+	</insert>
+</mapper>

@@ -1,0 +1,8 @@
+com\pachiraframework\party\entity\User.class
+com\pachiraframework\party\entity\Client.class
+com\pachiraframework\party\entity\Person$SexEnum.class
+com\pachiraframework\party\entity\Client$AutoApproveEnum.class
+com\pachiraframework\party\entity\Party.class
+com\pachiraframework\party\entity\Party$typeEnum.class
+com\pachiraframework\party\entity\Person.class
+com\pachiraframework\party\entity\Organization.class
