@@ -21,7 +21,7 @@
 			<groupId>com.pachiraframework</groupId>
 			<artifactId>pachiraframework-core</artifactId>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/pachiraframework-core-0.2.10.jar</systemPath>
+			<systemPath>${basedir}/lib/pachiraframework-core-0.2.11.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.pachiraframework</groupId>
@@ -47,6 +47,11 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

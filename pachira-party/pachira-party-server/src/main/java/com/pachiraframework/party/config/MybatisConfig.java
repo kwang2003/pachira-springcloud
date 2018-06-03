@@ -10,7 +10,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * 系统数据源配置
@@ -37,4 +39,11 @@ public class MybatisConfig {
 		sqlSessionFactoryBean.setMapperLocations(mappers);
 		return sqlSessionFactoryBean.getObject();
     }
+	
+    @Bean("partyTransactionManager")
+    public PlatformTransactionManager partyTransactionManager() {  
+    	DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();  
+        transactionManager.setDataSource(partyDataSource());  
+        return transactionManager;  
+    }  
 }

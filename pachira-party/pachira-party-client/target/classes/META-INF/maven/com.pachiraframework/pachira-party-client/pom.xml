@@ -20,7 +20,7 @@
 			<groupId>com.pachiraframework</groupId>
 			<artifactId>pachiraframework-core</artifactId>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/pachiraframework-core-0.2.10.jar</systemPath>
+			<systemPath>${basedir}/lib/pachiraframework-core-0.2.11.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
-<mapper namespace="com.pachiraframework.party.dao.UserDao" >  
-	<resultMap id="UserMap" type="User">
+<mapper namespace="com.pachiraframework.party.dao.UserLoginDao" >  
+	<resultMap id="UserLoginMap" type="UserLogin">
 		<id property="id" column="id" />
 		<result property="partyId" column="party_id" />
-		<result property="partyType" column="party_type" />
 		<result property="partyName" column="party_name" />
 		<result property="loginId" column="login_id" />
 		<result property="password" column="password"/>
+		<result property="enabled" column="enabled"/>
+		<result property="lastLocal" column="last_local"/>
+		<result property="lastTimeZone" column="last_time_zone"/>
+		<result property="disabledDate" column="disabled_date"/>
+		<result property="disabledBy" column="disabled_by"/>
+		<result property="userLdapDn" column="user_ldap_dn"/>
+		<result property="lastLoginIp" column="last_login_ip"/>
+		<result property="lastLoginDate" column="last_login_date"/>
 		<result property="createdAt" column="created_at" />
 		<result property="updatedAt" column="updated_at" />
 		<result property="createdBy" column="created_by"/>
 		<result property="updatedBy" column="updated_by"/>
 	</resultMap>
-	<sql id="table">user</sql>
+	<sql id="table">user_login</sql>
 	<sql id="columns">
-		party_id,party_type,party_name,login_id,password,created_at,updated_at,created_by,updated_by</sql>
+		id,party_id,party_name,login_id,password,enabled,last_local,last_time_zone,disabled_date,disabled_by,user_ldap_dn,last_login_ip,last_login_date,created_at,updated_at,created_by,updated_by</sql>
 	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
 	<sql id="orderBy">
 		<if test="pageRequest.orders.size() > 0">
@@ -28,14 +35,9 @@
 		<if test="pageRequest.name!=null and pageRequest.name !=''">
 			and `name` like CONCAT('%',#{pageRequest.name},'%' ) 		
 		</if>
-		<if test="pageRequest.status!=null and pageRequest.status !=''"> 			
-			<![CDATA[ 			
-				and status = (#{pageRequest.status}) 			
-			]]>
-		</if>
 	</sql>
-	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="UserMap">
-		select id,<include refid="columns"/> 
+	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="UserLoginMap">
+		select <include refid="columns"/> 
 		from <include refid="table"/>
 		where 1=1
         <foreach item="k" index="key" collection="where" >
@@ -62,8 +64,8 @@
         	limit #{limit.offset},#{limit.size}
         </if>        
 	</update>
-	<select id="findByPage" parameterType="PageRequest" resultMap="UserMap">
-		select id,
+	<select id="findByPage" parameterType="PageRequest" resultMap="UserLoginMap">
+		select 
 		<include refid="columns" />
 		from
 		<include refid="table" />
@@ -79,14 +81,22 @@
 		where 1=1
 		<include refid="findByPageCriteria" />
 	</select>
-	<insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="UserLogin" useGeneratedKeys="false" keyProperty="id">
 		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
 		VALUES(
+			#{id},
 			#{partyId},
-			#{partyType},
 			#{partyName},
 			#{loginId},
 			#{password},
+			#{enabled},
+			#{lastLocal},
+			#{lastTimeZone},
+			#{disabledDate},
+			#{disabledBy},
+			#{userLdapDn},
+			#{lastLoginIp},
+			#{lastLoginDate},
 			now(),
 			now(),
 			#{createdBy},

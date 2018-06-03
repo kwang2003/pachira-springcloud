@@ -10,7 +10,11 @@
         <typeAlias alias="SqlDeleteCommand" type="com.pachiraframework.dao.support.SqlDeleteCommand"/>
 	
 		<typeAlias alias="Client" type="com.pachiraframework.party.entity.Client"/>
-		<typeAlias alias="User" type="com.pachiraframework.party.entity.User"/>
+		<typeAlias alias="UserLogin" type="com.pachiraframework.party.entity.UserLogin"/>
+		<typeAlias alias="Person" type="com.pachiraframework.party.entity.Person"/>
+		<typeAlias alias="Party" type="com.pachiraframework.party.entity.Party"/>
+		<typeAlias alias="PartyGroup" type="com.pachiraframework.party.entity.PartyGroup"/>
+		<typeAlias alias="PartyType" type="com.pachiraframework.party.entity.PartyType"/>
 	</typeAliases>
 	<typeHandlers>
 		<typeHandler handler="com.pachiraframework.dao.IdHandler" />

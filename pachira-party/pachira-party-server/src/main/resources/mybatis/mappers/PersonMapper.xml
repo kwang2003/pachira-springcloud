@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.pachiraframework.party.dao.PersonDao" >  
+	<resultMap id="PersonMap" type="Person">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="gender" column="gender" />
+		<result property="birthDate" column="birth_date" />
+		<result property="height" column="height" />
+		<result property="weight" column="weight" />
+		<result property="maritalStatus" column="marital_status" />
+		<result property="cardId" column="card_id"/>
+		<result property="passportNumber" column="passport_number"/>
+		<result property="passportExpireDate" column="passport_expire_date"/>
+		<result property="socialSecurityNumber" column="social_security_number"/>
+		<result property="partyTypeId" column="party_type_id" />
+		<result property="externalId" column="external_id" />
+		<result property="statusId" column="status_id" />
+		<result property="description" column="description" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="createdBy" column="created_by"/>
+		<result property="updatedBy" column="updated_by"/>
+	</resultMap>
+	<sql id="table">person</sql>
+	<sql id="columns">
+		id,name,gender,birth_date,height,weight,marital_status,card_id,passport_number,passport_expire_date,social_security_number</sql>
+	<sql id="person_p_cloumns">
+		p.id,p.name,p.gender,p.birth_date,p.height,p.weight,p.marital_status,p.card_id,p.passport_number,p.passport_expire_date,p.social_security_number
+	</sql>
+	<sql id="party_pt_columns">
+		pt.party_type_id,pt.external_id,pt.status_id,pt.description,pt.created_at,pt.updated_at,pt.created_by,pt.updated_by
+	</sql>
+	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
+	<sql id="orderBy">
+		<if test="pageRequest.orders.size() > 0">
+			<foreach collection="pageRequest.orders" item="order" open="order by"
+				separator="," close=" "> ${order.property} ${order.direction}             
+			</foreach>
+		</if>
+	</sql> 	<!-- 分页查询模版普通信息 -->
+	<sql id="findByPageCriteria">
+		<if test="pageRequest.name!=null and pageRequest.name !=''">
+			and `p.name` like CONCAT('%',#{pageRequest.name},'%' ) 		
+		</if>
+	</sql>
+	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="PersonMap">
+		select <include refid="party_pt_columns"/>,<include refid="person_p_cloumns"/>
+		from <include refid="table"/> p left join party pt
+		on p.id = pt.id
+		where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}  
+        </foreach>
+        <foreach item="k" index="key" collection="orders" separator="," open=" order by ">
+        	${k.column} ${k.order}
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>
+	</select>
+	<update id="updateBySqlCommand" parameterType="SqlUpdateCommand">
+		update <include refid="table"/>
+		set updated_at = now(),
+        <foreach item="k" index="key" collection="columnValues" separator=",">
+            ${k.column} = #{k.value}
+        </foreach>
+        where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}    
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>        
+	</update>
+	<select id="findByPage" parameterType="PageRequest" resultMap="PersonMap">
+		select 
+		<include refid="party_pt_columns"/>,<include refid="person_p_cloumns"/>
+		from
+		<include refid="table" />  p left join party pt on p.id = pt.id
+		where 1=1
+		<include refid="findByPageCriteria" />
+		<include refid="orderBy" />
+		<include refid="limit" />
+	</select>
+	<select id="findByPageCount" parameterType="PageRequest"
+		resultType="int">
+		select count(*) from
+		<include refid="table" /> p left join party pt on p.id = pt.id
+		where 1=1
+		<include refid="findByPageCriteria" />
+	</select>
+	<insert id="insert" parameterType="Person" useGeneratedKeys="false" keyProperty="id">
+		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
+		VALUES(
+			#{id},
+			#{name},
+			#{gender},
+			#{birthDate},
+			#{height},
+			#{weight},
+			#{maritalStatus},
+			#{cardId},
+			#{passportNumber},
+			#{passportExpireDate},
+			#{socialSecurityNumber}	)
+	</insert>
+</mapper>
