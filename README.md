@@ -35,7 +35,7 @@
     - pachira-scheduler模块中的[application.properties](pachira-scheduler/src/main/resources/application.properties)文件
     - pachiar-party模块中的[MybatisConfig.java](pachira-party/pachira-party-server/src/main/java/com/pachiraframework/party/config/MybatisConfig.java)文件
 ### 1.6.运行项目
-按照如下步骤和地址启动并验证微服务的启动
+按照如下步骤和地址启动并验证微服务的启动 
 - pachira-scheduler模块
     - 启动类[com.pachiraframework.scheduler.SchedulerApplication](pachira-scheduler/src/main/java/com/pachiraframework/scheduler/SchedulerApplication.java)
     - 访问链接 [http://localhost:8082/job/search](http://localhost:8082/job/search)
