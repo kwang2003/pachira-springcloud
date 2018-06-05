@@ -46,7 +46,23 @@
     - 启动类 [com.pachiraframework.oauth2.PachiraOauth2Application](pachira-oauth2/src/main/java/com/pachiraframework/oauth2/PachiraOauth2Application.java) 
     - 访问链接(POST请求) [http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=aaaaaaaa](http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=aaaaaaaa)
 ## 2.pachira-party模块架构设计
-待完善
+### 2.1 模块定位
+该模块负责微服务框架中关于人员组织架构以及用户登录、权限控制模块的管理。
+### 2.2 核心模型
+|模型名称|中文|备注|
+|:-|:-|:-
+|Party|团体|可以是人员，也可以是组织|
+|Person|人员|团体的一个具体形式，描述现实世界中关于人的属性
+|PartyGroup|组织|团体的另一个具体形式，可以是一个团队、一个家庭，某个公司、或政府部门
+|UserLogin|用户登录帐号|登录帐号密码的组合体，帐号可以是属于某个Person人员，也可以是某个PartyGroup组织
+|UserLoginHistory|用户登录历史|登录的历史记录表
+|PartyType|团体类型|用于描述系统中的团体类型，类型有父子结构
+|Client|OAuth2接入客户端信息|使用OAuth2必须分配一个client接入方应用相关的信息
+
+目前系统中已经提供的PartyType(团体类型)如下
+![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/073EFB26A8FA4FDA8364199E99C8A590/78022](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/073EFB26A8FA4FDA8364199E99C8A590/78022)
+### 2.3 数据库设计
+![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/8BAE4D077D0E4579B8B07806411D7994/77982](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/8BAE4D077D0E4579B8B07806411D7994/77982)
 ## 3.pachira-oauth2模块架构设计
 待完善
 ## 4.pachira-scheduler模块架构设计

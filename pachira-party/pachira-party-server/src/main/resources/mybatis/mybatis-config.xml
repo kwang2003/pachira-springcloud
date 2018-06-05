@@ -11,6 +11,7 @@
 	
 		<typeAlias alias="Client" type="com.pachiraframework.party.entity.Client"/>
 		<typeAlias alias="UserLogin" type="com.pachiraframework.party.entity.UserLogin"/>
+		<typeAlias alias="UserLoginHistory" type="com.pachiraframework.party.entity.UserLoginHistory"/>
 		<typeAlias alias="Person" type="com.pachiraframework.party.entity.Person"/>
 		<typeAlias alias="Party" type="com.pachiraframework.party.entity.Party"/>
 		<typeAlias alias="PartyGroup" type="com.pachiraframework.party.entity.PartyGroup"/>

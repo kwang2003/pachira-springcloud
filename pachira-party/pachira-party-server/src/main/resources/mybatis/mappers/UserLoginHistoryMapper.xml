@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.pachiraframework.party.dao.UserLoginHistoryDao" >  
+	<resultMap id="UserLoginHistoryMap" type="UserLoginHistory">
+		<id property="id" column="id" />
+		<result property="partyId" column="party_id" />
+		<result property="userLoginId" column="user_login_id" />
+		<result property="loginId" column="login_id" />
+		<result property="loginIp" column="login_ip"/>
+		<result property="loginDate" column="login_date"/>
+	</resultMap>
+	<sql id="table">user_login_history</sql>
+	<sql id="columns">
+		id,party_id,user_login_id,login_id,login_ip,login_date</sql>
+	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
+	<sql id="orderBy">
+		<if test="pageRequest.orders.size() > 0">
+			<foreach collection="pageRequest.orders" item="order" open="order by"
+				separator="," close=" "> ${order.property} ${order.direction}             
+			</foreach>
+		</if>
+	</sql> 	<!-- 分页查询模版普通信息 -->
+	<sql id="findByPageCriteria">
+		<if test="pageRequest.name!=null and pageRequest.name !=''">
+			and `name` like CONCAT('%',#{pageRequest.name},'%' ) 		
+		</if>
+	</sql>
+	<select id="findListBySqlCommand" parameterType="SqlQueryCommand" resultMap="UserLoginHistoryMap">
+		select <include refid="columns"/> 
+		from <include refid="table"/>
+		where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}  
+        </foreach>
+        <foreach item="k" index="key" collection="orders" separator="," open=" order by ">
+        	${k.column} ${k.order}
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>
+	</select>
+	<update id="updateBySqlCommand" parameterType="SqlUpdateCommand">
+		update <include refid="table"/>
+		set updated_at = now(),
+        <foreach item="k" index="key" collection="columnValues" separator=",">
+            ${k.column} = #{k.value}
+        </foreach>
+        where 1=1
+        <foreach item="k" index="key" collection="where" >
+           ${k.andOr} ${k.column} ${k.operator} #{k.value}    
+        </foreach>
+        <if test="limit!=null">
+        	limit #{limit.offset},#{limit.size}
+        </if>        
+	</update>
+	<select id="findByPage" parameterType="PageRequest" resultMap="UserLoginHistoryMap">
+		select 
+		<include refid="columns" />
+		from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+		<include refid="orderBy" />
+		<include refid="limit" />
+	</select>
+	<select id="findByPageCount" parameterType="PageRequest"
+		resultType="int">
+		select count(*) from
+		<include refid="table" />
+		where 1=1
+		<include refid="findByPageCriteria" />
+	</select>
+	<insert id="insert" parameterType="UserLoginHistory" useGeneratedKeys="false" keyProperty="id">
+		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
+		VALUES(
+			#{id},
+			#{partyId},
+			#{userLoginId},
+			#{loginId},
+			#{loginIp},
+			#{loginDate}	)
+	</insert>
+</mapper>
