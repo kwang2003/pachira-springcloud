@@ -62,7 +62,7 @@
 目前系统中已经提供的PartyType(团体类型)如下
 ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/073EFB26A8FA4FDA8364199E99C8A590/78022](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/073EFB26A8FA4FDA8364199E99C8A590/78022)
 ### 2.3 数据库设计
-![etc\assets\pachira_party.bmp](etc\assets\pachira_party.bmp)
+![etc/assets/pachira_party.bmp](etc/assets/pachira_party.bmp)
 ## 3.pachira-oauth2模块架构设计
 待完善
 ## 4.pachira-scheduler模块架构设计
