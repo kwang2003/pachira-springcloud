@@ -7,12 +7,12 @@
 |JDK|1.8|正确设置JAVA_HOME、CLASSPATH、PATH变量
 |Maven|3.5.2|正确设置M2_HOME变量，把mvn加入到PATH下
 |MySQL|5.7|
-|Spring Boot|2.0.2.RELEASE|oauth2项目中使用的是1.5.12.RELEASE，因为2.x版本与某个class不兼容
+|Spring Boot|2.0.4.RELEASE|
 |Spring Cloud|Edgware.SR3
 |mybatis|3.4.6|使用mybatis-spring框架封装通用操作
-|swagger2|3.8.0|基于注解生成API文档
-|lombok|1.16.0|自动生成getter/setter/toString等方法
-|guava|18.0|
+|swagger2|2.9.2|基于注解生成API文档
+|lombok|1.16.22|自动生成getter/setter/toString等方法
+|guava|26.0-jre|
 
 ### 1.3.系统架构
 ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086)
