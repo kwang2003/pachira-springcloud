@@ -1,5 +1,11 @@
-D:\study\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Organization.java
-D:\study\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Client.java
-D:\study\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Party.java
-D:\study\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Person.java
-D:\study\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\User.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\dto\CurrentUserAwareDto.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\dto\CreateSimplePersonLoginUserDto.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Party.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Organization.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\PartyType.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\UserLoginHistory.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\UserLogin.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Client.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\PartyGroup.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\entity\Person.java
+D:\study\pachira-springcloud\pachira-party\pachira-party-client\src\main\java\com\pachiraframework\party\dto\CreatePersonDto.java
