@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.pachiraframework.scheduler.interceptor.JwtInterceptor;
 
@@ -16,7 +16,7 @@ import com.pachiraframework.scheduler.interceptor.JwtInterceptor;
  */
 @EnableScheduling
 @SpringBootApplication
-public class SchedulerApplication extends WebMvcConfigurerAdapter {
+public class SchedulerApplication implements WebMvcConfigurer {
 	@Autowired
 	private JwtInterceptor jwtInterceptor;
 

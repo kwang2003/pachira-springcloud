@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.pachiraframework.common.ExecuteResult;
+import com.pachiraframework.oauth2.Apis;
 import com.pachiraframework.party.entity.Client;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class DefaultClientDetailsService implements ClientDetailsService {
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 		ParameterizedTypeReference<ExecuteResult<Client>> typeRef = new ParameterizedTypeReference<ExecuteResult<Client>>() {  }; 
-		ResponseEntity<ExecuteResult<Client>> responseEntity = restTemplate.exchange("http://localhost:8080/v1/party/clients/?client_id="+clientId, HttpMethod.GET, new HttpEntity<>(null), typeRef); 
+		ResponseEntity<ExecuteResult<Client>> responseEntity = restTemplate.exchange(Apis.PARTY_CLIENTS+"?client_id="+clientId, HttpMethod.GET, new HttpEntity<>(null), typeRef); 
 		ExecuteResult<Client> result = responseEntity.getBody(); 
 		if(!result.isSuccess()) {
 			log.info("client:{} 加载失败，错误原因：{}",clientId,result.getMessage());

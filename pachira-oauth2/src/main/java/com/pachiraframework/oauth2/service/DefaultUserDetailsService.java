@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.pachiraframework.common.ExecuteResult;
+import com.pachiraframework.oauth2.Apis;
 import com.pachiraframework.party.entity.UserLogin;
 import com.pachiraframework.party.entity.UserLogin.EnabledEnum;
 
@@ -37,7 +38,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 		ParameterizedTypeReference<ExecuteResult<UserLogin>> typeRef = new ParameterizedTypeReference<ExecuteResult<UserLogin>>() {  }; 
-		ResponseEntity<ExecuteResult<UserLogin>> responseEntity = restTemplate.exchange("http://localhost:8080/v1/party/users/?login_id="+name, HttpMethod.GET, new HttpEntity<>(null), typeRef); 
+		ResponseEntity<ExecuteResult<UserLogin>> responseEntity = restTemplate.exchange(Apis.PARTY_USERS+"?login_id="+name, HttpMethod.GET, new HttpEntity<>(null), typeRef); 
 		ExecuteResult<UserLogin> result = responseEntity.getBody(); 
 		if(!result.isSuccess()) {
 			log.info("user name:{} 加载失败，错误原因：{}",name,result.getMessage());

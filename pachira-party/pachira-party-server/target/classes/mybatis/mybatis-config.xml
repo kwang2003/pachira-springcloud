@@ -16,6 +16,8 @@
 		<typeAlias alias="Party" type="com.pachiraframework.party.entity.Party"/>
 		<typeAlias alias="PartyGroup" type="com.pachiraframework.party.entity.PartyGroup"/>
 		<typeAlias alias="PartyType" type="com.pachiraframework.party.entity.PartyType"/>
+		<typeAlias alias="SecurityGroup" type="com.pachiraframework.party.entity.SecurityGroup"/>
+		<typeAlias alias="SecurityPermission" type="com.pachiraframework.party.entity.SecurityPermission"/>
 	</typeAliases>
 	<typeHandlers>
 		<typeHandler handler="com.pachiraframework.dao.IdHandler" />
