@@ -45,7 +45,7 @@ tmp/
 hs_err_pid*
 
 # Maven
-# target/
+target/
 log/
 
 ## Maven release plugin
