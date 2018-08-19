@@ -3,15 +3,13 @@
 <mapper namespace="com.pachiraframework.party.dao.UserLoginHistoryDao" >  
 	<resultMap id="UserLoginHistoryMap" type="UserLoginHistory">
 		<id property="id" column="id" />
-		<result property="partyId" column="party_id" />
-		<result property="userLoginId" column="user_login_id" />
 		<result property="loginId" column="login_id" />
 		<result property="loginIp" column="login_ip"/>
 		<result property="loginDate" column="login_date"/>
 	</resultMap>
 	<sql id="table">user_login_history</sql>
 	<sql id="columns">
-		id,party_id,user_login_id,login_id,login_ip,login_date</sql>
+		id,login_id,login_ip,login_date</sql>
 	<sql id="limit"> limit #{pageRequest.offset},#{pageRequest.size} 	</sql>
 	<sql id="orderBy">
 		<if test="pageRequest.orders.size() > 0">
@@ -74,8 +72,6 @@
 		INSERT INTO <include refid="table"/>(<include refid="columns"/>)
 		VALUES(
 			#{id},
-			#{partyId},
-			#{userLoginId},
 			#{loginId},
 			#{loginIp},
 			#{loginDate}	)

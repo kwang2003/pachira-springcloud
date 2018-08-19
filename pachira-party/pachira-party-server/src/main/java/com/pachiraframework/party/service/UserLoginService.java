@@ -2,7 +2,9 @@ package com.pachiraframework.party.service;
 
 import com.pachiraframework.common.ExecuteResult;
 import com.pachiraframework.party.dto.CreateSimplePersonLoginUserDto;
+import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
 import com.pachiraframework.party.entity.UserLogin;
+import com.pachiraframework.party.entity.UserLoginHistory;
 
 /**
  * 用户登录相关的服务
@@ -30,4 +32,11 @@ public interface UserLoginService {
 	 * @return
 	 */
 	ExecuteResult<UserLogin> create(CreateSimplePersonLoginUserDto createSimplePersonLoginUserDto);
+	
+	/**
+	 * 保存登录历史
+	 * @param createUserLoginHistoryDto
+	 * @return
+	 */
+	ExecuteResult<UserLoginHistory> createLoginHistory(CreateUserLoginHistoryDto createUserLoginHistoryDto);
 }

@@ -3,6 +3,8 @@ package com.pachiraframework.party.service.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Date;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,13 +19,16 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.pachiraframework.common.ExecuteResult;
 import com.pachiraframework.party.dao.UserLoginDao;
+import com.pachiraframework.party.dao.UserLoginHistoryDao;
 import com.pachiraframework.party.dto.CreatePersonDto;
 import com.pachiraframework.party.dto.CreateSimplePersonLoginUserDto;
+import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
 import com.pachiraframework.party.entity.Person;
 import com.pachiraframework.party.entity.Person.GenderEnum;
 import com.pachiraframework.party.entity.Person.MaritalStatusEnum;
 import com.pachiraframework.party.entity.UserLogin;
 import com.pachiraframework.party.entity.UserLogin.EnabledEnum;
+import com.pachiraframework.party.entity.UserLoginHistory;
 import com.pachiraframework.party.service.PersonService;
 import com.pachiraframework.party.service.UserLoginService;
 import com.pachiraframework.util.SnowflakeIdWorker;
@@ -41,6 +46,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 	private PersonService personService;
 	@Autowired
 	private UserLoginDao userLoginDao;
+	@Autowired
+	private UserLoginHistoryDao userLoginHistoryDao;
 	@Autowired
 	private SnowflakeIdWorker snowflakeIdWorker;
 	@Autowired
@@ -102,6 +109,25 @@ public class UserLoginServiceImpl implements UserLoginService {
 			return ExecuteResult.newSuccessResult(userLogin);
 		}catch(IllegalArgumentException | IllegalStateException e) {
 			log.warn("input:{},exception:{}",createSimplePersonLoginUserDto,e.getMessage());
+			return ExecuteResult.newErrorResult(e.getMessage());
+		}
+	}
+	@Override
+	public ExecuteResult<UserLoginHistory> createLoginHistory(CreateUserLoginHistoryDto createUserLoginHistoryDto) {
+		log.info("保存用户[{}]登录历史",createUserLoginHistoryDto.getLoginId());
+		try {
+			checkArgument(createUserLoginHistoryDto.getLoginId()!=null,"loginId不能为空");
+			UserLoginHistory history = new UserLoginHistory();
+			history.setLoginDate(new  Date());
+			history.setLoginId(createUserLoginHistoryDto.getLoginId());
+			history.setLoginIp(createUserLoginHistoryDto.getLoginIp());
+			Long id = snowflakeIdWorker.nextId();
+			history.setId(id);
+			userLoginHistoryDao.insert(history);
+			log.info("success create user_login_history,login_id={},id={}",createUserLoginHistoryDto.getLoginId(),id);
+			return ExecuteResult.newSuccessResult(history);
+		}catch(IllegalArgumentException | IllegalStateException e) {
+			log.warn("input:{},exception:{}",createUserLoginHistoryDto,e.getMessage());
 			return ExecuteResult.newErrorResult(e.getMessage());
 		}
 	}

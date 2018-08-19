@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pachiraframework.common.ExecuteResult;
+import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
 import com.pachiraframework.party.entity.UserLogin;
+import com.pachiraframework.party.entity.UserLoginHistory;
 import com.pachiraframework.party.service.UserLoginService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -43,6 +45,15 @@ public class UserController extends AbstractPartyController {
 	@ApiImplicitParam(name = "login_id", value = "用户登录帐号", required = true, dataType = "String")
 	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@RequestParam(name="login_id") String loginId) {
 		return Optional.ofNullable(userService.get(loginId)).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+	
+	@RequestMapping(value = "/users/login_history", method = RequestMethod.POST)
+	@ApiOperation(value = "保存用户登录历史记录", notes = "根据登录帐号来获取用户详细信息")
+	@ApiImplicitParam(name = "login_id", value = "用户登录帐号", required = true, dataType = "String")
+	public ResponseEntity<ExecuteResult<UserLoginHistory>> loginHistory(@RequestParam(name="login_id") String loginId) {
+		CreateUserLoginHistoryDto dto = new CreateUserLoginHistoryDto();
+		return Optional.ofNullable(userService.createLoginHistory(dto)).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 }
