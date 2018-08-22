@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * @author wangxuzheng
+ * @author Kevin Wang
  *
  */
 @RequestMapping("/v1/party/")
