@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  
+spring:
+  application:
+    name: pachira-party
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+#        healthCheckPath: ${management.context-path}/health
+        healthCheckInterval: 15s
+#        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
