@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,10 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.pachiraframework.common.ExecuteResult;
-import com.pachiraframework.oauth2.Apis;
+import com.pachiraframework.oauth2.feign.UserClient;
 import com.pachiraframework.party.entity.UserLogin;
 import com.pachiraframework.party.entity.UserLogin.EnabledEnum;
 
@@ -34,11 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class DefaultUserDetailsService implements UserDetailsService {
 	@Autowired
-	private RestTemplate restTemplate;
+	private UserClient userClient;
 	@Override
 	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-		ParameterizedTypeReference<ExecuteResult<UserLogin>> typeRef = new ParameterizedTypeReference<ExecuteResult<UserLogin>>() {  }; 
-		ResponseEntity<ExecuteResult<UserLogin>> responseEntity = restTemplate.exchange(Apis.PARTY_USERS+"?login_id="+name, HttpMethod.GET, new HttpEntity<>(null), typeRef); 
+		ResponseEntity<ExecuteResult<UserLogin>> responseEntity = userClient.getUser(name);
 		ExecuteResult<UserLogin> result = responseEntity.getBody(); 
 		if(!result.isSuccess()) {
 			log.info("user name:{} 加载失败，错误原因：{}",name,result.getMessage());
