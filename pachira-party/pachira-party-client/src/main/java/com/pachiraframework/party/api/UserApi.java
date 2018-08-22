@@ -1,5 +1,6 @@
 package com.pachiraframework.party.api;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,25 +15,25 @@ import com.pachiraframework.party.entity.UserLoginHistory;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * @author Kevin Wang
  *
  */
-@RequestMapping("/v1/party/")
+@RequestMapping("/v1/party")
 public interface UserApi {
 	@ApiOperation(value = "根据用户ID获取用户信息", notes = "根据url的id来获取用户详细信息")
-	@ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long")
+	@ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long",example="1")
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@PathVariable("userId") Long userId);
 	
 	@ApiOperation(value = "根据用户登录帐号获取用户信息", notes = "根据登录帐号来获取用户详细信息")
-	@ApiImplicitParam(name = "login_id", value = "用户登录帐号", required = true, dataType = "String")
+	@ApiImplicitParam(name = "loginId", value = "用户登录帐号", required = true, dataType = "String",example="admin")
 	@RequestMapping(value = "/users/", method = RequestMethod.GET)
-	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@RequestParam(name="login_id") String loginId);
+	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@RequestParam(name="loginId") String loginId);
 	
-	@ApiOperation(value = "保存用户登录历史记录", notes = "根据登录帐号来获取用户详细信息")
-	@ApiImplicitParam(name = "login_id", value = "用户登录帐号", required = true, dataType = "String")
+	@ApiOperation(value = "保存用户登录历史记录", notes = "根据登录帐号来获取用户详细信息",consumes= MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/users/login_history", method = RequestMethod.POST)
-	public ResponseEntity<ExecuteResult<UserLoginHistory>> loginHistory(@RequestBody CreateUserLoginHistoryDto loginDto);
+	public ResponseEntity<ExecuteResult<UserLoginHistory>> loginHistory(@ApiParam(name = "loginDto", value = "登录记录", required = true) @RequestBody CreateUserLoginHistoryDto loginDto);
 }

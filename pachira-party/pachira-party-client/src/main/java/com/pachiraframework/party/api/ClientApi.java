@@ -20,11 +20,11 @@ import io.swagger.annotations.ApiOperation;
 public interface ClientApi {
 	@RequestMapping(value = "/clients/{clientId}", method = RequestMethod.GET)
 	@ApiOperation(value = "根据用户ID获取客户端信息", notes = "根据url的id来获取客户端详细信息")
-	@ApiImplicitParam(name = "clientId", value = "客户端ID", required = true, dataType = "Long")
+	@ApiImplicitParam(name = "clientId", value = "客户端ID", required = true, dataType = "Long",example="1")
 	public ResponseEntity<ExecuteResult<Client>> getClient(@PathVariable("clientId") Long clientId);
 	
 	@RequestMapping(value = "/clients/", method = RequestMethod.GET)
 	@ApiOperation(value = "根据用户ClientId获取客户端信息", notes = "根据url的clientId来获取客户端详细信息")
-	@ApiImplicitParam(name = "client_id", value = "客户端编号ID", required = true, dataType = "String")
-	public ResponseEntity<ExecuteResult<Client>> getClient(@RequestParam(name="client_id") String clientId);
+	@ApiImplicitParam(name = "clientId", value = "客户端编号ID", required = true, dataType = "String",example="app1")
+	public ResponseEntity<ExecuteResult<Client>> getClient(@RequestParam(name="clientId") String clientId);
 }

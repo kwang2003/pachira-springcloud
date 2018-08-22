@@ -1,6 +1,6 @@
 package com.pachiraframework.party.dto;
 
-import com.pachiraframework.dto.BaseDto;
+import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +13,8 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString(callSuper=true)
-public class CurrentUserAwareDto extends BaseDto {
+@ToString
+public class CurrentUserAwareDto  implements Serializable{
 	private static final long serialVersionUID = -667246168827942303L;
 	/**
 	 * 当前操作人员
