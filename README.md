@@ -37,7 +37,7 @@
 - 启动consul服务注册中心
 	- 下载consul最新版本[consul_1.2.2_windows_amd64](https://releases.hashicorp.com/consul/1.2.2/consul_1.2.2_windows_amd64.zip)
 	- 解压到任意目录
-	- 启动 consul agent -server -ui -dev -dc=qd
+	- 启动 consul agent -server -ui -dev -datacenter=qd
 	- 访问consul控制台 [http://127.0.0.1:8500/ui](http://127.0.0.1:8500/ui)
 ### 1.6.运行项目
 按照如下步骤和地址启动并验证微服务的启动
