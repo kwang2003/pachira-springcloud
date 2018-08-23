@@ -46,7 +46,7 @@ public class LoginSuccessEventListener extends AbstractEventListener implements 
 			LoginSuccessEvent e = new LoginSuccessEvent();
 			e.setIp("");
 			e.setLoginId(user.getUsername());
-//TODO			saveLoginHistory(e);
+			saveLoginHistory(e);
 		}else {
 			log.warn("");
 		}

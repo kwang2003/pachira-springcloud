@@ -8,7 +8,6 @@ spring:
     consul:
       host: localhost
       port: 8500
-#      discovery:
-#        healthCheckPath: ${management.context-path}/health
-#        healthCheckInterval: 15s
-#        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}@${spring.cloud.client.ip-address}:${server.port}
