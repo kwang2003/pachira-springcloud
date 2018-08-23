@@ -8,7 +8,7 @@
 |Maven|3.5.2|正确设置M2_HOME变量，把mvn加入到PATH下
 |MySQL|5.7|
 |Spring Boot|2.0.4.RELEASE|
-|Spring Cloud|Edgware.SR3
+|Spring Cloud|Finchley.SR1
 |mybatis|3.4.6|使用mybatis-spring框架封装通用操作
 |swagger2|2.9.2|基于注解生成API文档
 |lombok|1.16.22|自动生成getter/setter/toString等方法
@@ -18,6 +18,123 @@
 ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/B20D652116F34B42B6D3C3915EBBF8A6/77086)
 
 ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/1FF86B52A0CA4D549EE962F7D8A43C95/77164](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/1FF86B52A0CA4D549EE962F7D8A43C95/77164)
+微服务之间的通信：
+- xxx-client模块中提供本模块对外暴漏的api接口和api中使用的参数entity,dto等
+- xxx-server模块提供对接口的实现
+- 模块之间通过feign实现接口调用
+- 服务启动成功后把自身注册到consul注册中心
+- 示例：
+    - 外部接口定义，位于[party-client](pachira-party-client/pachira-party-client)模块中的[UserApi.java](pachira-party/pachira-party-client/src/main/java/com/pachiraframework/party/api/UserApi.java)
+        ```
+        package com.pachiraframework.party.api;
+        
+        import org.springframework.http.MediaType;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.web.bind.annotation.PathVariable;
+        import org.springframework.web.bind.annotation.RequestBody;
+        import org.springframework.web.bind.annotation.RequestMapping;
+        import org.springframework.web.bind.annotation.RequestMethod;
+        import org.springframework.web.bind.annotation.RequestParam;
+        
+        import com.pachiraframework.common.ExecuteResult;
+        import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
+        import com.pachiraframework.party.entity.UserLogin;
+        import com.pachiraframework.party.entity.UserLoginHistory;
+        
+        import io.swagger.annotations.ApiImplicitParam;
+        import io.swagger.annotations.ApiOperation;
+        import io.swagger.annotations.ApiParam;
+        
+        /**
+         * @author Kevin Wang
+         *
+         */
+        @RequestMapping("/v1/party")
+        public interface UserApi {
+        	@ApiOperation(value = "根据用户ID获取用户信息", notes = "根据url的id来获取用户详细信息")
+        	@ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long",example="1")
+        	@RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
+        	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@PathVariable("userId") Long userId);
+        	
+        	@ApiOperation(value = "根据用户登录帐号获取用户信息", notes = "根据登录帐号来获取用户详细信息")
+        	@ApiImplicitParam(name = "loginId", value = "用户登录帐号", required = true, dataType = "String",example="admin")
+        	@RequestMapping(value = "/users/", method = RequestMethod.GET)
+        	public ResponseEntity<ExecuteResult<UserLogin>> getUser(@RequestParam(name="loginId") String loginId);
+        	
+        	@ApiOperation(value = "保存用户登录历史记录", notes = "根据登录帐号来获取用户详细信息",consumes= MediaType.APPLICATION_JSON_VALUE)
+        	@RequestMapping(value = "/users/login_history", method = RequestMethod.POST)
+        	public ResponseEntity<ExecuteResult<UserLoginHistory>> loginHistory(@ApiParam(name = "loginDto", value = "登录记录", required = true) @RequestBody CreateUserLoginHistoryDto loginDto);
+        }
+        
+        ```
+    - 接口实现，位于[pachira-party-server](pachira-party-client/pachira-party-server)模块的[UserController.java](pachira-party-server/src/main/java/com/pachiraframework/party/controller/UserController.java)
+        ```java
+        package com.pachiraframework.party.controller;
+        
+        import java.util.Optional;
+        
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.HttpStatus;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.web.bind.annotation.RequestBody;
+        import org.springframework.web.bind.annotation.RestController;
+        
+        import com.pachiraframework.common.ExecuteResult;
+        import com.pachiraframework.party.api.UserApi;
+        import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
+        import com.pachiraframework.party.entity.UserLogin;
+        import com.pachiraframework.party.entity.UserLoginHistory;
+        import com.pachiraframework.party.service.UserLoginService;
+        
+        /**
+         * 用户相关方法
+         * 
+         * @author KevinWang
+         *
+         */
+        @RestController
+        public class UserController extends AbstractPartyController implements UserApi{
+        	@Autowired
+        	private UserLoginService userService;
+        	@Override
+        	public ResponseEntity<ExecuteResult<UserLogin>> getUser(Long userId) {
+        		return Optional.ofNullable(userService.get(userId)).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+        				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        	}
+        	
+        	@Override
+        	public ResponseEntity<ExecuteResult<UserLogin>> getUser(String loginId) {
+        		return Optional.ofNullable(userService.get(loginId)).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+        				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        	}
+        	
+        	@Override
+        	public ResponseEntity<ExecuteResult<UserLoginHistory>> loginHistory(@RequestBody CreateUserLoginHistoryDto loginDto) {
+        		return Optional.ofNullable(userService.createLoginHistory(loginDto)).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+        				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        	}
+        }
+        
+        ```
+        **注意** 对于接口中定义了@RequestBody标签的参数，除了在Api接口中进行声明外，在实现接口的方法参数中还需要再声明一次，否则会导致该标签失效，示例见上面的 loginHistory方法。
+    - 外部模块调用，位于[pachira-oauth2](pachira-oauth2)模块的[UserClient.java](pachira-oauth2/src/main/java/com/pachiraframework/oauth2/feign/UserClient.java)中
+        ```
+        package com.pachiraframework.oauth2.feign;
+        
+        import org.springframework.cloud.openfeign.FeignClient;
+        
+        import com.pachiraframework.oauth2.Services;
+        import com.pachiraframework.party.api.UserApi;
+        
+        /**
+         * @author wangxuzheng
+         *
+         */
+        @FeignClient(name=Services.PARTY)
+        public interface UserClient extends UserApi{
+        }
+        ```
+        其中@FeignClient(name=Server.PARTY) name的取值为pachira-party模块注册到consul注册中心中的名字
 ### 1.4.系统模块
 |模块名|模块说明|备注
 |:-|:-|:-
@@ -28,6 +145,34 @@
 ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/868DFCDAC35040B491A2988A724C9B86/77239](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/868DFCDAC35040B491A2988A724C9B86/77239)
 ### 1.5.项目初始化
 - 确保Eclipse正确安装配置了[lombok](https://www.projectlombok.org/download)插件，并按照[配置步骤](https://www.projectlombok.org/setup/eclipse)进行设置(**推荐在所有项目中使用lombok**)
+- 将项目导入到eclipse或idea工作区中，并执行如下命令
+    > mvn clean compile
+   
+    因为项目引入了一个外部的jar包，通过mvn clean 命令会触发工程中配置的*maven-install-plugin*插件将该jar包ynstall到本地仓库中
+    ```
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-install-plugin</artifactId>
+		<executions>
+			<execution>
+				<id>install-external</id>
+				<phase>clean</phase>
+				<configuration>
+					<file>${basedir}/lib/pachiraframework-core-0.2.11.jar</file>
+					<repositoryLayout>default</repositoryLayout>
+					<groupId>com.pachiraframework</groupId>
+					<artifactId>pachiraframework-core</artifactId>
+					<version>0.2.11</version>
+					<packaging>jar</packaging>
+					<generatePom>true</generatePom>
+				</configuration>
+				<goals>
+					<goal>install-file</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+    ```
 - 将数据库脚本导入到数据库中(脚本的名字即对应的数据库名)
     - pachira-scheduler任务调度服务模块的脚本[pachira_scheduler.sql](etc/sql/pachira_scheduler.sql) 
     - pachira-party用户权限管理模块的脚本[pachira_party.sql](etc/sql/pahira_party.sql)
@@ -38,7 +183,9 @@
 	- 下载consul最新版本[consul_1.2.2_windows_amd64](https://releases.hashicorp.com/consul/1.2.2/consul_1.2.2_windows_amd64.zip)
 	- 解压到任意目录
 	- 启动 consul agent -server -ui -dev -datacenter=qd
+	    ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/9294D7D95F304887B7495FC50C3FEC78/79394](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/9294D7D95F304887B7495FC50C3FEC78/79394)
 	- 访问consul控制台 [http://127.0.0.1:8500/ui](http://127.0.0.1:8500/ui)
+	    ![https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/0A4B65C987F44F959EEB4D0BC23F755B/79396](https://note.youdao.com/yws/public/resource/e5bb1aa758439bbedce6c5dd9a73a81c/xmlnote/0A4B65C987F44F959EEB4D0BC23F755B/79396)
 ### 1.6.运行项目
 按照如下步骤和地址启动并验证微服务的启动
 - pachira-scheduler模块
