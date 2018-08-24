@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-08-23 07:05:10
+Date: 2018-08-24 08:13:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -559,9 +559,12 @@ CREATE TABLE `user_login_history` (
   `login_id` varchar(30) NOT NULL,
   `login_ip` varchar(20) DEFAULT NULL COMMENT '登录ip',
   `login_date` datetime DEFAULT NULL COMMENT '登录时间',
+  `status` bit(1) NOT NULL DEFAULT b'1' COMMENT '1:登录成功，0：登录失败',
+  `message` varchar(255) DEFAULT NULL COMMENT '登录失败，则填写错误原因',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_login_history
 -- ----------------------------
+INSERT INTO `user_login_history` VALUES ('482459417757880320', 'admin', '', '2018-08-24 08:01:29', '', null);

@@ -28,6 +28,7 @@ import com.pachiraframework.party.entity.Person.GenderEnum;
 import com.pachiraframework.party.entity.Person.MaritalStatusEnum;
 import com.pachiraframework.party.entity.UserLogin;
 import com.pachiraframework.party.entity.UserLogin.EnabledEnum;
+import com.pachiraframework.party.entity.UserLoginHistory.StatusEnum;
 import com.pachiraframework.party.entity.UserLoginHistory;
 import com.pachiraframework.party.service.PersonService;
 import com.pachiraframework.party.service.UserLoginService;
@@ -121,6 +122,8 @@ public class UserLoginServiceImpl implements UserLoginService {
 			history.setLoginDate(new  Date());
 			history.setLoginId(createUserLoginHistoryDto.getLoginId());
 			history.setLoginIp(createUserLoginHistoryDto.getLoginIp());
+			history.setMessage(createUserLoginHistoryDto.getMessage());
+			history.setStatus(createUserLoginHistoryDto.getSuccess()?StatusEnum.SUCCSSS.getStatus():StatusEnum.FAIL.getStatus());
 			Long id = snowflakeIdWorker.nextId();
 			history.setId(id);
 			userLoginHistoryDao.insert(history);

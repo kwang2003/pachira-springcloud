@@ -33,6 +33,8 @@ public class LoginSuccessEventListener extends AbstractEventListener implements 
 		CreateUserLoginHistoryDto dto = new CreateUserLoginHistoryDto();
 		dto.setLoginId(event.getLoginId());
 		dto.setLoginIp(event.getIp());
+		dto.setMessage(event.getMessage());
+		dto.setSuccess(true);
 		ResponseEntity<ExecuteResult<UserLoginHistory>> responseEntity =userClient.loginHistory(dto);
 		log.info("{}",responseEntity);
 	}
@@ -46,6 +48,7 @@ public class LoginSuccessEventListener extends AbstractEventListener implements 
 			LoginSuccessEvent e = new LoginSuccessEvent();
 			e.setIp("");
 			e.setLoginId(user.getUsername());
+			e.setMessage("success!");
 			saveLoginHistory(e);
 		}else {
 			log.warn("");

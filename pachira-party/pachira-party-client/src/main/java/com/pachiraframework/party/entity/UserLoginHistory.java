@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.pachiraframework.entity.BaseEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,4 +24,13 @@ public class UserLoginHistory extends BaseEntity<Long> {
 	private String loginIp;
 	private Date loginDate;
 	private Long partyId;
+	private Integer status;
+	private String message;
+
+	@Getter
+	@AllArgsConstructor
+	public static enum StatusEnum{
+		SUCCSSS(1),FAIL(0);
+		private Integer status;
+	}
 }
