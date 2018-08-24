@@ -196,7 +196,7 @@
     - 访问链接 [http://localhost:8080/v1/party/1](http://localhost:8080/v1/party/1)
 - pachira-oauth2模块
     - 启动类 [com.pachiraframework.oauth2.PachiraOauth2Application](pachira-oauth2/src/main/java/com/pachiraframework/oauth2/PachiraOauth2Application.java) 
-    - 访问链接(POST请求) [http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=aaaaaaaa](http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=aaaaaaaa)
+    - 访问链接(POST请求) [http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=123456](http://localhost:8081/oauth/token?username=admin&password=123456&grant_type=password&scope=app&client_id=app1&client_secret=123456)
 ## 2.pachira-party模块架构设计
 ### 2.1 模块定位
 该模块负责微服务框架中关于人员组织架构以及用户登录、权限控制模块的管理。
