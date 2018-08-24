@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { parse, stringify } from 'qs';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -76,7 +77,7 @@ function accMul(arg1, arg2) {
   const s2 = arg2.toString();
   m += s1.split('.').length > 1 ? s1.split('.')[1].length : 0;
   m += s2.split('.').length > 1 ? s2.split('.')[1].length : 0;
-  return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / 10 ** m;
+  return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / 10 ** m;
 }
 
 export function digitUppercase(n) {
@@ -123,11 +124,10 @@ function getRenderArr(routes) {
   let renderArr = [];
   renderArr.push(routes[0]);
   for (let i = 1; i < routes.length; i += 1) {
-    let isAdd = false;
-    // 是否包含
-    isAdd = renderArr.every(item => getRelation(item, routes[i]) === 3);
     // 去重
     renderArr = renderArr.filter(item => getRelation(item, routes[i]) !== 1);
+    // 是否包含
+    const isAdd = renderArr.every(item => getRelation(item, routes[i]) === 3);
     if (isAdd) {
       renderArr.push(routes[i]);
     }
@@ -162,8 +162,20 @@ export function getRoutes(path, routerData) {
   return renderRoutes;
 }
 
+export function getPageQuery() {
+  return parse(window.location.href.split('?')[1]);
+}
+
+export function getQueryPath(path = '', query = {}) {
+  const search = stringify(query);
+  if (search.length) {
+    return `${path}?${search}`;
+  }
+  return path;
+}
+
 /* eslint no-useless-escape:0 */
-const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g;
+const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export function isUrl(path) {
   return reg.test(path);

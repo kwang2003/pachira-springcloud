@@ -80,21 +80,6 @@ const menuData = [
     ],
   },
   {
-    name: '客户端管理',
-    icon: 'table',
-    path: 'form',
-    children: [
-      {
-        name: '客户端列表',
-        path: 'table-list',
-      },
-      {
-        name: '新增客户端',
-        path: 'basic-form',
-      },
-    ],
-  },
-  {
     name: '详情页',
     icon: 'profile',
     path: 'profile',

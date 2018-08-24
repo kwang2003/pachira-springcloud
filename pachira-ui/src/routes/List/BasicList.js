@@ -24,13 +24,30 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Search } = Input;
 
+const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
+  <div className={styles.listContent}>
+    <div className={styles.listContentItem}>
+      <span>Owner</span>
+      <p>{owner}</p>
+    </div>
+    <div className={styles.listContentItem}>
+      <span>开始时间</span>
+      <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+    </div>
+    <div className={styles.listContentItem}>
+      <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
+    </div>
+  </div>
+);
+
 @connect(({ list, loading }) => ({
   list,
   loading: loading.models.list,
 }))
 export default class BasicList extends PureComponent {
   componentDidMount() {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'list/fetch',
       payload: {
         count: 5,
@@ -39,7 +56,10 @@ export default class BasicList extends PureComponent {
   }
 
   render() {
-    const { list: { list }, loading } = this.props;
+    const {
+      list: { list },
+      loading,
+    } = this.props;
 
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
@@ -66,22 +86,6 @@ export default class BasicList extends PureComponent {
       pageSize: 5,
       total: 50,
     };
-
-    const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
-      <div className={styles.listContent}>
-        <div className={styles.listContentItem}>
-          <span>Owner</span>
-          <p>{owner}</p>
-        </div>
-        <div className={styles.listContentItem}>
-          <span>开始时间</span>
-          <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
-        </div>
-        <div className={styles.listContentItem}>
-          <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
-        </div>
-      </div>
-    );
 
     const menu = (
       <Menu>

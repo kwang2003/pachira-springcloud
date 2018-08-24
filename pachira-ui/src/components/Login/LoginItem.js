@@ -14,25 +14,36 @@ function generator({ defaultProps, defaultRules, type }) {
         form: PropTypes.object,
         updateActive: PropTypes.func,
       };
+
+      static defaultProps = {
+        buttonText: '获取验证码',
+      };
+
       constructor(props) {
         super(props);
         this.state = {
           count: 0,
         };
       }
+
       componentDidMount() {
-        if (this.context.updateActive) {
-          this.context.updateActive(this.props.name);
+        const { updateActive } = this.context;
+        const { name } = this.props;
+        if (updateActive) {
+          updateActive(name);
         }
       }
+
       componentWillUnmount() {
         clearInterval(this.interval);
       }
+
       onGetCaptcha = () => {
         let count = 59;
         this.setState({ count });
-        if (this.props.onGetCaptcha) {
-          this.props.onGetCaptcha();
+        const { onGetCaptcha } = this.props;
+        if (onGetCaptcha) {
+          onGetCaptcha();
         }
         this.interval = setInterval(() => {
           count -= 1;
@@ -42,11 +53,13 @@ function generator({ defaultProps, defaultRules, type }) {
           }
         }, 1000);
       };
+
       render() {
-        const { getFieldDecorator } = this.context.form;
+        const { form } = this.context;
+        const { getFieldDecorator } = form;
         const options = {};
         let otherProps = {};
-        const { onChange, defaultValue, rules, name, ...restProps } = this.props;
+        const { onChange, defaultValue, buttonText, rules, name, ...restProps } = this.props;
         const { count } = this.state;
         options.rules = rules || defaultRules;
         if (onChange) {
@@ -73,7 +86,7 @@ function generator({ defaultProps, defaultRules, type }) {
                     size="large"
                     onClick={this.onGetCaptcha}
                   >
-                    {count ? `${count} s` : '获取验证码'}
+                    {count ? `${count} s` : buttonText}
                   </Button>
                 </Col>
               </Row>

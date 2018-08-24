@@ -44,8 +44,8 @@ for (let i = 0; i < 7; i += 1) {
 
 const Yuan = ({ children }) => (
   <span
-    dangerouslySetInnerHTML={{ __html: yuan(children) }}
-  /> /* eslint-disable-line react/no-danger */
+    dangerouslySetInnerHTML={{ __html: yuan(children) }} /* eslint-disable-line react/no-danger */
+  />
 );
 
 @connect(({ chart, loading }) => ({
@@ -60,7 +60,8 @@ export default class Analysis extends Component {
   };
 
   componentDidMount() {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'chart/fetch',
     });
   }
@@ -89,7 +90,8 @@ export default class Analysis extends Component {
       rangePickerValue,
     });
 
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'chart/fetchSalesData',
     });
   };
@@ -99,7 +101,8 @@ export default class Analysis extends Component {
       rangePickerValue: getTimeDistance(type),
     });
 
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'chart/fetchSalesData',
     });
   };
@@ -136,7 +139,9 @@ export default class Analysis extends Component {
     const salesPieData =
       salesType === 'all'
         ? salesTypeData
-        : salesType === 'online' ? salesTypeDataOnline : salesTypeDataOffline;
+        : salesType === 'online'
+          ? salesTypeDataOnline
+          : salesTypeDataOffline;
 
     const menu = (
       <Menu>
@@ -203,7 +208,10 @@ export default class Analysis extends Component {
         sorter: (a, b) => a.range - b.range,
         render: (text, record) => (
           <Trend flag={record.status === 1 ? 'down' : 'up'}>
-            <span style={{ marginRight: 4 }}>{text}%</span>
+            <span style={{ marginRight: 4 }}>
+              {text}
+              %
+            </span>
           </Trend>
         ),
         align: 'right',
@@ -253,6 +261,7 @@ export default class Analysis extends Component {
             <ChartCard
               bordered={false}
               title="总销售额"
+              loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -263,10 +272,12 @@ export default class Analysis extends Component {
               contentHeight={46}
             >
               <Trend flag="up" style={{ marginRight: 16 }}>
-                周同比<span className={styles.trendText}>12%</span>
+                周同比
+                <span className={styles.trendText}>12%</span>
               </Trend>
               <Trend flag="down">
-                日环比<span className={styles.trendText}>11%</span>
+                日环比
+                <span className={styles.trendText}>11%</span>
               </Trend>
             </ChartCard>
           </Col>
@@ -274,6 +285,7 @@ export default class Analysis extends Component {
             <ChartCard
               bordered={false}
               title="访问量"
+              loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -290,6 +302,7 @@ export default class Analysis extends Component {
             <ChartCard
               bordered={false}
               title="支付笔数"
+              loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -306,6 +319,7 @@ export default class Analysis extends Component {
             <ChartCard
               bordered={false}
               title="运营活动效果"
+              loading={loading}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
@@ -315,10 +329,12 @@ export default class Analysis extends Component {
               footer={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
                   <Trend flag="up" style={{ marginRight: 16 }}>
-                    周同比<span className={styles.trendText}>12%</span>
+                    周同比
+                    <span className={styles.trendText}>12%</span>
                   </Trend>
                   <Trend flag="down">
-                    日环比<span className={styles.trendText}>11%</span>
+                    日环比
+                    <span className={styles.trendText}>11%</span>
                   </Trend>
                 </div>
               }

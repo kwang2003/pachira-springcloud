@@ -117,8 +117,9 @@ export default class TableList extends PureComponent {
   };
 
   toggleForm = () => {
+    const { expandForm } = this.state;
     this.setState({
-      expandForm: !this.state.expandForm,
+      expandForm: !expandForm,
     });
   };
 
@@ -184,7 +185,8 @@ export default class TableList extends PureComponent {
   };
 
   handleAdd = fields => {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'rule/add',
       payload: {
         description: fields.desc,
@@ -198,7 +200,8 @@ export default class TableList extends PureComponent {
   };
 
   renderSimpleForm() {
-    const { getFieldDecorator } = this.props.form;
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -236,7 +239,8 @@ export default class TableList extends PureComponent {
   }
 
   renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -291,7 +295,7 @@ export default class TableList extends PureComponent {
           </Col>
         </Row>
         <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
+          <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">
               查询
             </Button>
@@ -301,18 +305,22 @@ export default class TableList extends PureComponent {
             <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
               收起 <Icon type="up" />
             </a>
-          </span>
+          </div>
         </div>
       </Form>
     );
   }
 
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    const { expandForm } = this.state;
+    return expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
   render() {
-    const { rule: { data }, loading } = this.props;
+    const {
+      rule: { data },
+      loading,
+    } = this.props;
     const { selectedRows, modalVisible } = this.state;
 
     const columns = [

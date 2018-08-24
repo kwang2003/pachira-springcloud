@@ -13,6 +13,7 @@ import com.pachiraframework.party.dto.CreateUserLoginHistoryDto;
 import com.pachiraframework.party.entity.UserLogin;
 import com.pachiraframework.party.entity.UserLoginHistory;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiParam;
  * @author Kevin Wang
  *
  */
+@Api("用户登录帐号相关的API")
 @RequestMapping("/v1/party")
 public interface UserApi {
 	@ApiOperation(value = "根据用户ID获取用户信息", notes = "根据url的id来获取用户详细信息")
