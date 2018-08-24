@@ -25,7 +25,7 @@
 - 服务启动成功后把自身注册到consul注册中心
 - 示例：
     - 外部接口定义，位于[party-client](pachira-party-client/pachira-party-client)模块中的[UserApi.java](pachira-party/pachira-party-client/src/main/java/com/pachiraframework/party/api/UserApi.java)
-        ```
+        ```java
         package com.pachiraframework.party.api;
         
         import org.springframework.http.MediaType;
@@ -118,7 +118,7 @@
         ```
         **注意** 对于接口中定义了@RequestBody标签的参数，除了在Api接口中进行声明外，在实现接口的方法参数中还需要再声明一次，否则会导致该标签失效，示例见上面的 loginHistory方法。
     - 外部模块调用，位于[pachira-oauth2](pachira-oauth2)模块的[UserClient.java](pachira-oauth2/src/main/java/com/pachiraframework/oauth2/feign/UserClient.java)中
-        ```
+        ```java
         package com.pachiraframework.oauth2.feign;
         
         import org.springframework.cloud.openfeign.FeignClient;
@@ -149,7 +149,7 @@
     > mvn clean compile
    
     因为项目引入了一个外部的jar包，通过mvn clean 命令会触发工程中配置的*maven-install-plugin*插件将该jar包ynstall到本地仓库中
-    ```
+    ```xml
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-install-plugin</artifactId>

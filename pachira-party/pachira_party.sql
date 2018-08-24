@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-08-24 08:13:30
+Date: 2018-08-24 22:24:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -568,3 +568,19 @@ CREATE TABLE `user_login_history` (
 -- Records of user_login_history
 -- ----------------------------
 INSERT INTO `user_login_history` VALUES ('482459417757880320', 'admin', '', '2018-08-24 08:01:29', '', null);
+INSERT INTO `user_login_history` VALUES ('482462577180282880', 'admin', '', '2018-08-24 08:14:02', '', 'success!');
+
+-- ----------------------------
+-- Table structure for user_login_security_group
+-- ----------------------------
+DROP TABLE IF EXISTS `user_login_security_group`;
+CREATE TABLE `user_login_security_group` (
+  `login_id` varchar(20) NOT NULL,
+  `group_id` varchar(30) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`login_id`,`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user_login_security_group
+-- ----------------------------
