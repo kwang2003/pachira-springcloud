@@ -1,7 +1,5 @@
 package com.pachiraframework.party.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pachiraframework.common.ExecuteResult;
+import com.pachiraframework.party.config.FeignSkipBadRequestsConfiguration.FeignBadResponseException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,9 +37,11 @@ public class LoginController extends AbstractPartyController {
 	public ResponseEntity<ExecuteResult<String>> login(@RequestParam("login_id") String loginId,
 			@RequestParam String password) {
 		String scope = "app";
-		String token = oauth2Facade.passwordLogin(loginId, password, scope);
-		return Optional.ofNullable(ExecuteResult.newSuccessResult(token))
-				.map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		try {
+			String token = oauth2Facade.passwordLogin(loginId, password, scope);
+			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(token),HttpStatus.OK);
+		}catch(FeignBadResponseException e) {
+			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(e.getBody()),HttpStatus.BAD_REQUEST);
+		}
 	}
 }

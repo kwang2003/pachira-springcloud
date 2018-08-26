@@ -1,6 +1,7 @@
 package com.pachiraframework.party.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.pachiraframework.party.feign.Oauth2Client;
@@ -26,8 +27,8 @@ public class Oauth2Facade {
 	 * @return
 	 */
 	public String passwordLogin(String loginId,String password,String scope) {
-		String result = oauth2Client.login(loginId, password, "password", scope, clientId, clientSecret);
+		ResponseEntity<String> result = oauth2Client.login(loginId, password, "password", scope, clientId, clientSecret);
 		log.info("{}",result);
-		return result;
+		return result.getBody();
 	}
 }
