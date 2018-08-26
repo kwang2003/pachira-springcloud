@@ -41,7 +41,7 @@ public class LoginController extends AbstractPartyController {
 			String token = oauth2Facade.passwordLogin(loginId, password, scope);
 			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(token),HttpStatus.OK);
 		}catch(FeignBadResponseException e) {
-			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(e.getBody()),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newErrorResult(e.getBody()),HttpStatus.BAD_REQUEST);
 		}
 	}
 }
