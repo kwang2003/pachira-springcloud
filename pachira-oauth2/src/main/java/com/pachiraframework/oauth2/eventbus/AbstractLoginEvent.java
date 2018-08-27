@@ -19,4 +19,5 @@ public abstract class AbstractLoginEvent {
 	 * 浏览器
 	 */
 	private String userAgent;
+	private String message;
 }

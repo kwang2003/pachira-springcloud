@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.pachiraframework.common.ExecuteResult;
 import com.pachiraframework.party.config.FeignSkipBadRequestsConfiguration.FeignBadResponseException;
 
@@ -16,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 
 /**
  * 登录操作
@@ -27,6 +31,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/v1/party/")
 public class LoginController extends AbstractPartyController {
+	private Gson gson = new GsonBuilder().create();
 	@Autowired
 	private Oauth2Facade oauth2Facade;
 
@@ -41,7 +46,21 @@ public class LoginController extends AbstractPartyController {
 			String token = oauth2Facade.passwordLogin(loginId, password, scope);
 			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(token),HttpStatus.OK);
 		}catch(FeignBadResponseException e) {
-			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newErrorResult(e.getBody()),HttpStatus.BAD_REQUEST);
+			String error = errorMessage(e.getBody());
+			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newErrorResult(error),HttpStatus.valueOf(e.getStatus()));
 		}
+	}
+	
+	private String errorMessage(String bodyJson) {
+		BadResponse bad = gson.fromJson(bodyJson, BadResponse.class);
+		return bad.getMessage();
+	}
+	
+	@Data
+	private static class BadResponse{
+		@SerializedName("error_description")
+		private String message;
+		@SerializedName("error")
+		private String code;
 	}
 }

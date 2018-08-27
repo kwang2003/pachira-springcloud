@@ -13,5 +13,4 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper=true)
 public class LoginSuccessEvent extends AbstractLoginEvent{
-	private String message;
 }
