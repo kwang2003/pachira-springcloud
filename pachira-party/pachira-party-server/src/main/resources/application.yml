@@ -4,7 +4,17 @@ server:
 feign:
   okhttp:
     enabled: true
-  
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
+              
+ribbon:  
+   ReadTimeout: 6000
+   ConnectTimeout: 6000
+     
 spring:
   application:
     name: pachira-party
