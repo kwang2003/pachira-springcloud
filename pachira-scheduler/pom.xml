@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.pachiraframework</groupId>
 			<artifactId>pachiraframework-core</artifactId>
-			<version>0.2.10</version>
+			<version>0.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -58,6 +58,20 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-consul-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.4.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+			<version>8.18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -136,19 +150,129 @@
 	</dependencies>
 
 	<build>
-		<finalName>scheduler</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>install-external</id>
+						<phase>clean</phase>
+						<configuration>
+							<file>${basedir}/lib/pachiraframework-core-0.2.11.jar</file>
+							<repositoryLayout>default</repositoryLayout>
+							<groupId>com.pachiraframework</groupId>
+							<artifactId>pachiraframework-core</artifactId>
+							<version>0.2.11</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
 						<goals>
-							<goal>repackage</goal>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<configuration>
+					<repositoryLayout>flat</repositoryLayout>
+					<logsDirectory>logs</logsDirectory>
+					<tempDirectory>tmps</tempDirectory>
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<target>${project.build.directory}</target>
+					<daemons>
+						<daemon>
+							<id>${project.artifactId}</id>
+							<mainClass>com.pachiraframework.scheduler.SchedulerApplication</mainClass>
+							<platforms>
+								<platform>jsw</platform>
+							</platforms>
+							<generatorConfigurations>
+								<generatorConfiguration>
+									<generator>jsw</generator>
+									<includes>
+										<include>linux-x86-32</include>
+					                    <include>linux-x86-64</include>
+					                    <include>windows-x86-32</include>
+					                    <include>windows-x86-64</include>
+					                    <include>macosx-universal-32</include>
+					                    <include>macosx-universal-64</include>
+									</includes>
+									<configuration>
+										<property>
+											<name>configuration.directory.in.classpath.first</name>
+											<value>etc</value>
+										</property>
+										<property>
+											<name>set.default.REPO_DIR</name>
+											<value>lib</value>
+										</property>
+										<property>
+											<name>wrapper.logfile</name>
+											<value>logs/wrapper.log</value>
+										</property>
+									</configuration>
+								</generatorConfiguration>
+							</generatorConfigurations>
+							<jvmSettings>
+								<initialMemorySize>${initialMemorySize}</initialMemorySize>
+								<maxMemorySize>${maxMemorySize}</maxMemorySize>
+								<extraArguments>
+									<extraArgument>-server</extraArgument>
+									<extraArgument>-XX:+DisableExplicitGC</extraArgument>
+									<extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
+									<extraArgument>-XX:+UseFastAccessorMethods</extraArgument>
+									<extraArgument>-Djava.io.tmpdir=./tmps</extraArgument>
+								</extraArguments>
+							</jvmSettings>
+						</daemon>
+					</daemons>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-jsw-scripts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>generate-daemons</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>jsw-zip.xml</descriptor>
+					</descriptors>
+					<finalName>${project.artifactId}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-zip</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<initialMemorySize>256M</initialMemorySize>
+				<maxMemorySize>512M</maxMemorySize>
+			</properties>
+		</profile>
+	</profiles>
 </project>

@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.pachiraframework</groupId>
@@ -111,66 +109,64 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.10</version>
+				<version>2.0.0</version>
 				<configuration>
-					<configurationDirectory>conf</configurationDirectory>
-					<configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-					<useWildcardClassPath>true</useWildcardClassPath>
 					<repositoryLayout>flat</repositoryLayout>
-					<repositoryName>lib</repositoryName>
-					<binFileExtensions>
-						<unix>.sh</unix>
-					</binFileExtensions>
+					<logsDirectory>logs</logsDirectory>
+					<tempDirectory>tmps</tempDirectory>
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<target>${project.build.directory}</target>
 					<daemons>
 						<daemon>
+							<id>${project.artifactId}</id>
 							<mainClass>com.pachiraframework.party.PachiraPartyApplication</mainClass>
+							<platforms>
+								<platform>jsw</platform>
+							</platforms>
 							<generatorConfigurations>
 								<generatorConfiguration>
 									<generator>jsw</generator>
 									<includes>
 										<include>linux-x86-32</include>
-										<include>linux-x86-64</include>
-										<include>windows-x86-32</include>
-										<include>windows-x86-64</include>
-										<include>macosx-universal-32</include>
-										<include>macosx-universal-64</include>
+					                    <include>linux-x86-64</include>
+					                    <include>windows-x86-32</include>
+					                    <include>windows-x86-64</include>
+					                    <include>macosx-universal-32</include>
+					                    <include>macosx-universal-64</include>
 									</includes>
 									<configuration>
 										<property>
 											<name>configuration.directory.in.classpath.first</name>
-											<value>conf</value>
+											<value>etc</value>
+										</property>
+										<property>
+											<name>set.default.REPO_DIR</name>
+											<value>lib</value>
 										</property>
 										<property>
 											<name>wrapper.logfile</name>
-											<value>logs/location-web.log</value>
-										</property>
-										<property>
-											<name>wrapper.logfile.format</name>
-											<value>M</value>
-										</property>
-										<property>
-											<name>wrapper.logfile.maxsize</name>
-											<value>10m</value>
-										</property>
-										<property>
-											<name>wrapper.logfile.maxfiles</name>
-											<value>5</value>
+											<value>logs/wrapper.log</value>
 										</property>
 									</configuration>
 								</generatorConfiguration>
 							</generatorConfigurations>
-							<platforms>
-								<platform>jsw</platform>
-							</platforms>
-							<id>investigate-spring-boot</id>
+							<jvmSettings>
+								<initialMemorySize>${initialMemorySize}</initialMemorySize>
+								<maxMemorySize>${maxMemorySize}</maxMemorySize>
+								<extraArguments>
+									<extraArgument>-server</extraArgument>
+									<extraArgument>-XX:+DisableExplicitGC</extraArgument>
+									<extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
+									<extraArgument>-XX:+UseFastAccessorMethods</extraArgument>
+									<extraArgument>-Djava.io.tmpdir=./tmps</extraArgument>
+								</extraArguments>
+							</jvmSettings>
 						</daemon>
 					</daemons>
 				</configuration>
 				<executions>
 					<execution>
-						<id>build-deploy-dir</id>
+						<id>generate-jsw-scripts</id>
 						<phase>package</phase>
 						<goals>
 							<goal>generate-daemons</goal>
@@ -179,22 +175,37 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>jsw-zip.xml</descriptor>
+					</descriptors>
+					<finalName>${project.artifactId}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>make-zip</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
 						<goals>
 							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/resources/assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<initialMemorySize>256M</initialMemorySize>
+				<maxMemorySize>512M</maxMemorySize>
+			</properties>
+		</profile>
+	</profiles>
 </project>

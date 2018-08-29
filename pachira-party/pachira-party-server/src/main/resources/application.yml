@@ -1,5 +1,8 @@
 server:
   port: 8080
+  tomcat:
+    min-spare-threads: 20
+    max-threads: 100
 
 feign:
   okhttp:
