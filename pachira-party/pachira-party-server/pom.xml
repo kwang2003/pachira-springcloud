@@ -48,9 +48,9 @@
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.netflix.feign</groupId>
-		    <artifactId>feign-okhttp</artifactId>
-		    <version>8.18.0</version>
+			<groupId>com.netflix.feign</groupId>
+			<artifactId>feign-okhttp</artifactId>
+			<version>8.18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -109,8 +109,91 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<configurationDirectory>conf</configurationDirectory>
+					<configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<useWildcardClassPath>true</useWildcardClassPath>
+					<repositoryLayout>flat</repositoryLayout>
+					<repositoryName>lib</repositoryName>
+					<binFileExtensions>
+						<unix>.sh</unix>
+					</binFileExtensions>
+					<daemons>
+						<daemon>
+							<mainClass>com.pachiraframework.party.PachiraPartyApplication</mainClass>
+							<generatorConfigurations>
+								<generatorConfiguration>
+									<generator>jsw</generator>
+									<includes>
+										<include>linux-x86-32</include>
+										<include>linux-x86-64</include>
+										<include>windows-x86-32</include>
+										<include>windows-x86-64</include>
+										<include>macosx-universal-32</include>
+										<include>macosx-universal-64</include>
+									</includes>
+									<configuration>
+										<property>
+											<name>configuration.directory.in.classpath.first</name>
+											<value>conf</value>
+										</property>
+										<property>
+											<name>wrapper.logfile</name>
+											<value>logs/location-web.log</value>
+										</property>
+										<property>
+											<name>wrapper.logfile.format</name>
+											<value>M</value>
+										</property>
+										<property>
+											<name>wrapper.logfile.maxsize</name>
+											<value>10m</value>
+										</property>
+										<property>
+											<name>wrapper.logfile.maxfiles</name>
+											<value>5</value>
+										</property>
+									</configuration>
+								</generatorConfiguration>
+							</generatorConfigurations>
+							<platforms>
+								<platform>jsw</platform>
+							</platforms>
+							<id>investigate-spring-boot</id>
+						</daemon>
+					</daemons>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build-deploy-dir</id>
+						<phase>package</phase>
+						<goals>
+							<goal>generate-daemons</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/resources/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
