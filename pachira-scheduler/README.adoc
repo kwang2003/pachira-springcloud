@@ -10,6 +10,6 @@
 == 本地运行项目
 * 新建数据库scheduler，并将scheduler.sql脚本导入到数据库中
 * 本地运行一个zookeeper，占用2181端口（默认），如果没有安装，则到http://zookeeper.apache.org/ 下载一个
-* 修改项目配置项 application.properties，包括zookeeper的地址和端口，数据库的连接信息
+* 修改项目配置项 application.yml，包括zookeeper的地址和端口，数据库的连接信息
 * 运行项目SchedulerApplication
-* 查看项目的API http://localhost:8080/swagger-ui.html
+* 查看项目的API http://localhost:8082/swagger-ui.html
