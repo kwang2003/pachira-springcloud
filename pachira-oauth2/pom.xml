@@ -163,6 +163,10 @@
 									<extraArgument>-XX:+DisableExplicitGC</extraArgument>
 									<extraArgument>-XX:+UseConcMarkSweepGC</extraArgument>
 									<extraArgument>-XX:+UseFastAccessorMethods</extraArgument>
+									<extraArgument>-XX:+HeapDumpOnOutOfMemoryError</extraArgument>
+									<extraArgument>-XX:HeapDumpPath=./logs/heap.dump</extraArgument>
+									<extraArgument>-verbose:gc</extraArgument>
+									<extraArgument>-Xloggc:./logs/gc.log</extraArgument>
 									<extraArgument>-Djava.io.tmpdir=./tmps</extraArgument>
 								</extraArguments>
 							</jvmSettings>
