@@ -61,7 +61,7 @@ export async function queryFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+  return request('http://192.168.132.1:8083/pachira-party/v1/party/users/login', {
     method: 'POST',
     body: params,
   });

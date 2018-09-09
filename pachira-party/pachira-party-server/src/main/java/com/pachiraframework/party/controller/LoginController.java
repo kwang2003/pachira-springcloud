@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -14,11 +14,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.pachiraframework.common.ExecuteResult;
 import com.pachiraframework.party.config.FeignSkipBadRequestsConfiguration.FeignBadResponseException;
+import com.pachiraframework.party.dto.LoginRequestDto;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 /**
@@ -37,17 +37,14 @@ public class LoginController extends AbstractPartyController {
 
 	@ApiOperation(value = "用户登录", notes = "用户登录", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/users/login", method = RequestMethod.POST)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "login_id", value = "登录帐号", required = true, dataType = "String"),
-			@ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String") })
-	public ResponseEntity<ExecuteResult<String>> login(@RequestParam("login_id") String loginId,
-			@RequestParam String password) {
+	public ResponseEntity<ExecuteResult<String>> login(@ApiParam(name="用户登录信息",value="传入json格式",required=true) @RequestBody LoginRequestDto loginRequest) {
 		String scope = "app";
 		try {
-			String token = oauth2Facade.passwordLogin(loginId, password, scope);
+			String token = oauth2Facade.passwordLogin(loginRequest.getLoginId(), loginRequest.getPassword(), scope);
 			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newSuccessResult(token),HttpStatus.OK);
 		}catch(FeignBadResponseException e) {
 			String error = errorMessage(e.getBody());
-			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newErrorResult(error),HttpStatus.valueOf(e.getStatus()));
+			return new ResponseEntity<ExecuteResult<String>>(ExecuteResult.newErrorResult(error),HttpStatus.OK);
 		}
 	}
 	

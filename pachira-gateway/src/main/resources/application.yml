@@ -1,0 +1,42 @@
+server:
+  port: 8083
+
+feign:
+  okhttp:
+    enabled: true
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
+ribbon:  
+   ReadTimeout: 6000
+   ConnectTimeout: 6000
+                  
+spring:
+  application:
+    name: pachira-gateway
+  cloud:
+    gateway:
+       globalcors:
+          corsConfigurations:
+             '[/**]':
+                maxAge: 1800
+                allowedOrigins: "*"
+                allowCredentials: true
+                allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+       discovery:
+          locator:
+             enabled: true
+             lower-case-service-id: true
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}@${spring.cloud.client.ip-address}:${server.port}
