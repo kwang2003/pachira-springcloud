@@ -20,7 +20,7 @@ export default {
         payload: response,
       });
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.success === true) {alert('ddd');
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -62,10 +62,10 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      setAuthority(payload);
       return {
         ...state,
-        status: payload.status,
+        status: payload.success,
         type: payload.type,
       };
     },

@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
+import {ApiServers} from '../common/config';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -61,7 +62,7 @@ export async function queryFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('http://192.168.132.1:8083/pachira-party/v1/party/users/login', {
+  return request(`${ApiServers.PartyServer}`+'/v1/party/users/login', {
     method: 'POST',
     body: params,
   });
